@@ -1,7 +1,7 @@
 public class Funcionario{
-    private String nome;
-    private String funcao;
-    private double salario;
+    public String nome;
+    public String funcao;
+    public double salario;
 
     public Funcionario(String nome, String funcao, double salario){
         this.nome = nome;

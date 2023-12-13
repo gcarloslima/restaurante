@@ -42,7 +42,7 @@ public class Pedido {
                         "\n--------------------------------------------------------");
 
         for (Item item : itens.keySet()) {
-            listaPedidos.add(String.format("%s - R$ %.2f x %d ................. R$ %.2f", item.nome, item.preco, itens.get(item),
+            listaPedidos.add(String.format("%s - R$ %.2f x %d ................... R$ %.2f", item.nome, item.preco, itens.get(item),
                     itens.get(item) * item.preco));
         }
         //Água - R$ 2,00 x 2 .................... R$ 4,00
