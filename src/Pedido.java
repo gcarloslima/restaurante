@@ -3,12 +3,15 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class Pedido {
+    private int numPedido;
     private Map<Item, Integer> itens; // Item e quantidade
     private Cliente cliente;
+    private static int qtdPedidos = 0;
 
     public Pedido(Cliente cliente) {
         this.cliente = cliente;
         this.itens = new HashMap<Item, Integer>();
+        this.numPedido = ++qtdPedidos;
     }
 
     public void adicionarItem(Item item, int quantidade) {
@@ -31,85 +34,92 @@ public class Pedido {
     // imprimirPedido. Imprime todos os itens do pedido.
     public String imprimirPedido() {
         StringJoiner listaPedidos = new StringJoiner("\n");
+        listaPedidos.add(
+                String.format("======================= PEDIDO %d =======================\n", numPedido) +
+                        "Cliente: " + cliente.nome +
+                        "\nMesa: " + cliente.numeroMesa +
+                        "\nCPF: " + cliente.cpf +
+                        "\n--------------------------------------------------------");
 
-        listaPedidos.add("Cliente: " + cliente.nome);
-        listaPedidos.add("Mesa: " + cliente.numeroMesa);
-        listaPedidos.add("CPF: " + cliente.cpf);
         for (Item item : itens.keySet()) {
-            listaPedidos.add(item.nome + " - " + itens.get(item) + " - " + item.preco);
+            listaPedidos.add(String.format("%s - R$ %.2f x %d ................. R$ %.2f", item.nome, item.preco, itens.get(item),
+                    itens.get(item) * item.preco));
         }
-        listaPedidos.add("Total: " + calcularTotal());
+        //Água - R$ 2,00 x 2 .................... R$ 4,00
+        listaPedidos.add(
+                "--------------------------------------------------------" +
+                        String.format("\nTotal: R$ %.2f", calcularTotal()) +
+                        "\n========================================================\n\n");
+
         return listaPedidos.toString();
     }
-
 }
 
+// private int codigo;
+// private String descricao;
+// private int quantidade;
+// private double valorUnitario;
+// private double valorTotal;
 
+// public Pedido(int codigo, String descricao, int quantidade, double
+// valorUnitario, double valorTotal) {
+// this.codigo = codigo;
+// this.descricao = descricao;
+// this.quantidade = quantidade;
+// this.valorUnitario = valorUnitario;
+// this.valorTotal = valorTotal;
+// }
 
+// public void imprimirPedido(){
+// System.out.println("Código: " + this.codigo);
+// System.out.println("Descrição: " + this.descricao);
+// System.out.println("Quantidade: " + this.quantidade);
+// System.out.println("Valor Unitário: " + this.valorUnitario);
+// System.out.println("Valor Total: " + this.valorTotal);
+// }
 
-//     private int codigo;
-//     private String descricao;
-//     private int quantidade;
-//     private double valorUnitario;
-//     private double valorTotal;
+// public double calcularTotal(){
+// return this.quantidade * this.valorUnitario;
+// }
 
-//     public Pedido(int codigo, String descricao, int quantidade, double valorUnitario, double valorTotal) {
-//         this.codigo = codigo;
-//         this.descricao = descricao;
-//         this.quantidade = quantidade;
-//         this.valorUnitario = valorUnitario;
-//         this.valorTotal = valorTotal;
-//     }
+// public void imprimirTotal(){
+// System.out.println("Valor Total: " + this.calcularTotal());
+// }
 
-//     public void imprimirPedido(){
-//         System.out.println("Código: " + this.codigo);
-//         System.out.println("Descrição: " + this.descricao);
-//         System.out.println("Quantidade: " + this.quantidade);
-//         System.out.println("Valor Unitário: " + this.valorUnitario);
-//         System.out.println("Valor Total: " + this.valorTotal);
-//     }
+// public void imprimirResumo(){
+// System.out.println("Código: " + this.codigo);
+// System.out.println("Descrição: " + this.descricao);
+// System.out.println("Valor Total: " + this.calcularTotal());
+// }
 
-//     public double calcularTotal(){
-//         return this.quantidade * this.valorUnitario;
-//     }
+// public void alterarQuantidade(int novaQuantidade){
+// this.quantidade = novaQuantidade;
+// }
 
-//     public void imprimirTotal(){
-//         System.out.println("Valor Total: " + this.calcularTotal());
-//     }
+// public void alterarValorUnitario(double novoValor){
+// this.valorUnitario = novoValor;
+// }
 
-//     public void imprimirResumo(){
-//         System.out.println("Código: " + this.codigo);
-//         System.out.println("Descrição: " + this.descricao);
-//         System.out.println("Valor Total: " + this.calcularTotal());
-//     }
+// public void alterarDescricao(String novaDescricao){
+// this.descricao = novaDescricao;
+// }
 
-//     public void alterarQuantidade(int novaQuantidade){
-//         this.quantidade = novaQuantidade;
-//     }
+// public void alterarCodigo(int novoCodigo){
+// this.codigo = novoCodigo;
+// }
 
-//     public void alterarValorUnitario(double novoValor){
-//         this.valorUnitario = novoValor;
-//     }
+// public void alterarPedido(int novoCodigo, String novaDescricao, int
+// novaQuantidade, double novoValor){
+// this.codigo = novoCodigo;
+// this.descricao = novaDescricao;
+// this.quantidade = novaQuantidade;
+// this.valorUnitario = novoValor;
+// }
 
-//     public void alterarDescricao(String novaDescricao){
-//         this.descricao = novaDescricao;
-//     }
+// public void incluirImposto(double taxaImposto){
+// this.valorTotal = this.valorTotal + (this.valorTotal * taxaImposto);
+// }
 
-//     public void alterarCodigo(int novoCodigo){
-//         this.codigo = novoCodigo;
-//     }
-
-//     public void alterarPedido(int novoCodigo, String novaDescricao, int novaQuantidade, double novoValor){
-//         this.codigo = novoCodigo;
-//         this.descricao = novaDescricao;
-//         this.quantidade = novaQuantidade;
-//         this.valorUnitario = novoValor;
-//     }
-
-//     public void incluirImposto(double taxaImposto){
-//         this.valorTotal = this.valorTotal + (this.valorTotal * taxaImposto);
-//     }
-
-//     public double calcularImposto(){
-//         return this.valorTotal * 0.1;
-//     }
+// public double calcularImposto(){
+// return this.valorTotal * 0.1;
+// }
