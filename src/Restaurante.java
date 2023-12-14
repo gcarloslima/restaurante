@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,16 +9,16 @@ public class Restaurante {
     static List<Funcionario> funcionarios = new ArrayList<>();
     static List<Cliente> clientes = new ArrayList<>();
     static List<Pedido> pedidos = new ArrayList<>();
-    static Scanner scanner = new Scanner(System.in);
+    static Scanner s = new Scanner(System.in);
 
     public static void main(String[] args) {
 
-        menu.add(new Item("Coca-Cola", 5.00));
-        menu.add(new Item("Hamburguer", 10.00));
-        menu.add(new Item("Batata Frita", 8.00));
-        menu.add(new Item("Sorvete", 7.00));
+        menu.add(new Item("Smash Burger", 24.90));
+        menu.add(new Item("Batata Frita", 18.90));
+        menu.add(new Item("Coca-Cola", 4.00));
+        menu.add(new Item("Sorvete", 8.00));
         menu.add(new Item("Suco", 6.00));
-        menu.add(new Item("Água", 4.00));
+        menu.add(new Item("Água", 3.50));
 
         clientes.add(new Cliente("Sebastião", 10, "123.456.789-00"));
         clientes.add(new Cliente("Ivete Sangalo", 11, "987.654.321-00"));
@@ -47,71 +48,106 @@ public class Restaurante {
             System.out.println(
                     "\nAdministração Paia Burger and Grill\n\n" +
                             "1 - Exibir Cardápio\n" +
-                            "2 - Cadastrar funcionário\n" +
+                            "2 - Manejar funcionários\n" +
                             "3 - Manejar itens\n" +
-                            "4 - Cadastrar pedido\n" +
-                            "5 - Listar funcionários\n" +
-                            "6 - Listar clientes\n" +
-                            "7 - Listar itens\n" +
-                            "8 - Listar pedidos\n" +
-                            "9 - Demitir funcionário\n" +
-                            "10 - Sair\n");
+                            "4 - Manejar pedidos\n" +
+                            "5 - Manejar clientes\n" +
+                            "6 - Sair\n");
 
-            opcao = scanner.nextInt();
+            opcao = s.nextInt();
+            s.nextLine();
 
             switch (opcao) {
                 case 1:
                     exibirCardapio();
                     break;
                 case 2:
-                    cadastrarFuncionario();
+                    manejarFuncionarios();
                     break;
                 case 3:
                     manejarItens();
                     break;
                 case 4:
-                    cadastrarPedido();
+                    manejarPedidos();
                     break;
                 case 5:
-                    listarFuncionarios();
+                    manejarClientes();
                     break;
-                case 6:
-                    listarClientes();
-                    break;
-                case 7:
-                    listarItens();
-                    break;
-                case 8:
-                    listarPedidos();
-                    break;
-                case 9:
-                    demitirFuncionario();
-                    break;
+                default:
+                    System.out.println("Opção inválida");
             }
-        } while (opcao != 10);
+        } while (opcao != 6);
 
     }
 
     public static void exibirCardapio() {
-        String cardapio = "\nCardápio\n\n";
+        String cardapio = "\n========== Paia's Burger ==========\n\n";
         for (Item item : menu) {
-            cardapio += String.format("%s - R$ %.2f\n", item.nome, item.preco);
+            cardapio += String.format("%s .......... R$ %.2f\n", item.nome, item.preco);
         }
         System.out.println(cardapio);
     }
 
+    public static void manejarFuncionarios() {
+        int opcao;
+
+        do {
+            System.out.println(
+                    "\n========= Manejar funcionários =========\n\n" +
+                            "1 - Cadastrar funcionário\n" +
+                            "2 - Listar funcionários\n" +
+                            "3 - Demitir funcionário\n" +
+                            "4 - Voltar\n\n" +
+                            "========================================\n");
+            opcao = s.nextInt();
+            s.nextLine();
+            switch (opcao) {
+                case 1:
+                    cadastrarFuncionario();
+                    break;
+                case 2:
+                    listarFuncionarios();
+                    break;
+                case 3:
+                    demitirFuncionario();
+                    break;
+            }
+
+        } while (opcao != 4);
+    }
+
     public static void cadastrarFuncionario() {
         System.out.println("Digite o nome do funcionário");
-        String nome = scanner.nextLine();
+        String nome = s.nextLine();
         System.out.println("Digite o cargo do funcionário");
-        String funcao = scanner.nextLine();
+        String funcao = s.nextLine();
         System.out.println("Digite o salário do funcionário");
         try {
-            double salario = scanner.nextDouble();
+            double salario = s.nextDouble();
+            s.nextLine();
             funcionarios.add(new Funcionario(nome, funcao, salario));
         } catch (Exception e) {
             System.out.println("Erro ao ler salário. Certifique-se de inserir um número válido.");
-            scanner.nextLine();
+        }
+    }
+
+    public static void listarFuncionarios() {
+        String listaFuncionarios = "Relação de funcionários\n\n";
+        for (Funcionario funcionario : funcionarios) {
+            listaFuncionarios += funcionario.nome + "\n" + funcionario.funcao + "\nR$ " + funcionario.salario
+                    + "\n------------------\n";
+        }
+        System.out.println(listaFuncionarios);
+    }
+
+    public static void demitirFuncionario() {
+        System.out.println("Digite o nome do funcionário");
+        String nome = s.nextLine();
+        for (Funcionario funcionario : funcionarios) {
+            if (funcionario.nome.equals(nome)) {
+                funcionarios.remove(funcionario);
+                break;
+            }
         }
     }
 
@@ -125,22 +161,34 @@ public class Restaurante {
                             "1 - Adicionar item\n" +
                             "2 - Remover item\n" +
                             "3 - Alterar preço\n" +
-                            "4 - Voltar\n\n" +
-                    "==================================\n");
-            opcao = scanner.nextInt();
-            scanner.nextLine();
-            switch(opcao){
+                            "4 - Mostrar itens\n" +
+                            "5 - Voltar\n\n" +
+                            "==================================\n");
+            opcao = s.nextInt();
+            s.nextLine();
+            switch (opcao) {
                 case 1:
                     System.out.println("Digite o nome do item");
-                    String nome = scanner.nextLine();
+                    String nome = s.nextLine();
                     System.out.println("Digite o preço do item");
                     try {
-                        double preco = scanner.nextDouble();
-                        scanner.nextLine();
+                        double preco = s.nextDouble();
+                        s.nextLine();
+                        if (preco <= 0) {
+                            throw new Exception("Preço inválido");
+                        } else if (preco > 1000) {
+                            throw new Exception("Preço muito alto");
+                        }
+                        
                         menu.add(new Item(nome, preco));
-                    } catch (Exception e) {
+
+                    } catch(InputMismatchException ime) {
                         System.out.println("Erro ao ler preço. Certifique-se de inserir um número válido.");
-                        scanner.nextLine();
+                        s.nextLine();
+                    }
+                    
+                    catch (Exception e) {
+                        System.err.println(e.getMessage());
                     }
                     break;
                 case 2:
@@ -149,14 +197,17 @@ public class Restaurante {
                 case 3:
                     alterarPreco();
                     break;
+                case 4:
+                    exibirCardapio();
+                    break;
             }
 
-        } while(opcao!=4);
+        } while (opcao != 5);
     }
 
     public static void removerItem() {
         System.out.println("Digite o nome do item");
-        String nome = scanner.nextLine();
+        String nome = s.nextLine();
         for (Item item : menu) {
             if (item.nome.equals(nome)) {
                 menu.remove(item);
@@ -167,7 +218,7 @@ public class Restaurante {
 
     public static void alterarPreco() {
         System.out.println("Digite o nome do item");
-        String nome = scanner.nextLine();
+        String nome = s.nextLine();
         boolean itemEncontrado = false;
         int posicaoParaAlterar = 0;
         try {
@@ -179,30 +230,55 @@ public class Restaurante {
                 }
             }
             if (!itemEncontrado) {
-                throw new ItemNotFoundException("Item não encontrado");
+                throw new Exception("Item não encontrado");
             }
             System.out.println("Digite o novo preço do item");
-            menu.get(posicaoParaAlterar).preco = scanner.nextDouble();
-            
+            double novoPreco = s.nextDouble();
+            s.nextLine();
+            if (novoPreco <= 0) {
+                throw new Exception("Preço inválido");
+            } else if (novoPreco > 1000) {
+                throw new Exception("Preço muito alto");
+            }
+            menu.get(posicaoParaAlterar).preco = novoPreco;
 
-        } catch (ItemNotFoundException e) {
-            System.out.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro ao ler preço. Certifique-se de inserir um número válido.");
-            scanner.nextLine();
+            System.err.println(e.getMessage());
         }
     }
-    
+
+    public static void manejarPedidos() {
+        int opcao;
+
+        do {
+            System.out.println(
+                    "\n========= Manejar pedidos =========\n\n" +
+                            "1 - Cadastrar pedido\n" +
+                            "2 - Listar pedidos\n" +
+                            "3 - Voltar\n\n" +
+                            "===================================\n");
+            opcao = s.nextInt();
+            s.nextLine();
+            switch (opcao) {
+                case 1:
+                    cadastrarPedido();
+                    break;
+                case 2:
+                    listarPedidos();
+                    break;
+            }
+
+        } while (opcao != 3);
+    }
+
     public static void cadastrarPedido() {
         System.out.println("Digite o nome do cliente");
-        String nome = scanner.nextLine();
-        scanner.nextLine();
-        System.out.println("Digite a mesa do cliente");
-        int numeroMesa = scanner.nextInt();
-        scanner.nextLine();
+        String nome = s.nextLine();
+        System.out.println("Digite o número mesa do cliente");
+        int numeroMesa = s.nextInt();
+        s.nextLine();
         System.out.println("Digite o CPF do cliente");
-        String cpf = scanner.nextLine();
-        scanner.nextLine();
+        String cpf = s.nextLine();
         clientes.add(new Cliente(nome, numeroMesa, cpf));
         pedidos.add(new Pedido(clientes.get(clientes.size() - 1)));
         int opcao;
@@ -210,12 +286,13 @@ public class Restaurante {
             System.out.println(
                     "1 - Adicionar item\n" +
                             "2 - Finalizar pedido\n");
-            opcao = scanner.nextInt();
+            opcao = s.nextInt();
+            s.nextLine();
             switch (opcao) {
                 case 1:
-                    try{
+                    try {
                         adicionarItem();
-                    } catch(ItemNotFoundException e){
+                    } catch (ItemNotFoundException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -223,50 +300,6 @@ public class Restaurante {
                     break;
             }
         } while (opcao != 2);
-    }
-
-    public static void adicionarItem() throws ItemNotFoundException {
-
-        System.out.println("Digite o nome do item");
-        String nome = scanner.nextLine();
-
-        System.out.println("Digite a quantidade do item");
-        int quantidade = scanner.nextInt();
-        scanner.nextLine();
-        boolean ItemEncontrado = false;
-        for (Item item : menu) {
-            if (item.nome.equals(nome)) {
-                pedidos.get(pedidos.size() - 1).adicionarItem(item, quantidade);
-                ItemEncontrado = true;
-            }
-        }
-        if (!ItemEncontrado) {
-            throw new ItemNotFoundException("Item não encontrado");
-        }
-    }
-
-    public static void listarFuncionarios() {
-        String listaFuncionarios = "Lista de funcionários\n\n";
-        for (Funcionario funcionario : funcionarios) {
-            listaFuncionarios += funcionario.nome + " - " + funcionario.funcao + " - R$ " + funcionario.salario + "\n";
-        }
-        System.out.println(listaFuncionarios);
-    }
-
-    public static void listarClientes() {
-        String listaClientes = "Lista de clientes\n\n";
-        for (Cliente cliente : clientes) {
-            listaClientes += cliente.nome + " - " + cliente.cpf + "\n";
-        }
-        System.out.println(listaClientes);
-    }
-
-    public static void listarItens() {
-        String listaItens = "Lista de itens\n\n";
-        for (Item item : menu) {
-            listaItens += item.nome + " - R$ " + item.preco + "\n";
-        }
-        System.out.println(listaItens);
     }
 
     public static void listarPedidos() {
@@ -280,14 +313,67 @@ public class Restaurante {
         System.out.println(listaPedidos);
     }
 
-    public static void demitirFuncionario() {
-        System.out.println("Digite o nome do funcionário");
-        String nome = scanner.nextLine();
-        for (Funcionario funcionario : funcionarios) {
-            if (funcionario.nome.equals(nome)) {
-                funcionarios.remove(funcionario);
-                break;
+    public static void adicionarItem() throws ItemNotFoundException {
+
+        System.out.println("Digite o nome do item");
+        String nome = s.nextLine();
+
+        System.out.println("Digite a quantidade do item");
+        int quantidade = s.nextInt();
+        s.nextLine();
+        boolean ItemEncontrado = false;
+        for (Item item : menu) {
+            if (item.nome.equals(nome)) {
+                pedidos.get(pedidos.size() - 1).adicionarItem(item, quantidade);
+                ItemEncontrado = true;
             }
         }
+        if (!ItemEncontrado) {
+            throw new ItemNotFoundException("Item não encontrado");
+        }
     }
+
+    public static void manejarClientes() {
+        int opcao;
+
+        do {
+            System.out.println(
+                    "\n========= Manejar clientes =========\n\n" +
+                            "1 - Cadastrar cliente\n" +
+                            "2 - Listar clientes\n" +
+                            "3 - Voltar\n\n" +
+                            "====================================\n");
+            opcao = s.nextInt();
+            s.nextLine();
+            switch (opcao) {
+                case 1:
+                    cadastrarCliente();
+                    break;
+                case 2:
+                    listarClientes();
+                    break;
+            }
+
+        } while (opcao != 3);
+    }
+
+    public static void cadastrarCliente() {
+        System.out.println("Digite o nome do cliente");
+        String nome = s.nextLine();
+        System.out.println("Digite a mesa do cliente");
+        int numeroMesa = s.nextInt();
+        s.nextLine();
+        System.out.println("Digite o CPF do cliente");
+        String cpf = s.nextLine();
+        clientes.add(new Cliente(nome, numeroMesa, cpf));
+    }
+
+    public static void listarClientes() {
+        String listaClientes = "Lista de clientes\n\n";
+        for (Cliente cliente : clientes) {
+            listaClientes += cliente.nome + " - " + cliente.cpf + "\n";
+        }
+        System.out.println(listaClientes);
+    }
+
 }

@@ -1,4 +1,4 @@
-public class Funcionario{
+public class Funcionario {
     public String nome;
     public String funcao;
     public double salario;
